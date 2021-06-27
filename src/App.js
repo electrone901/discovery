@@ -4,7 +4,7 @@ import { Container } from '@material-ui/core';
 import './App.css';
 import { Navbar } from './components/layout/navbar/Navbar';
 import Paths from './components/paths/Paths';
-import Footer from './components/layout/navbar/Footer';
+import Footer from './components/layout/footer/Footer';
 import Home from './components/home/Home';
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
           <Route exact path="/register" component={Home} />
           <Route exact path="/login" component={Home} />
           <Switch>
-            <Route exact path="/paths" component={Paths} />
+            <Route exact path="/courses" component={Paths} />
           </Switch>
         </Container>
         <Footer />
