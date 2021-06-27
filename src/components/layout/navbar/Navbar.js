@@ -1,142 +1,186 @@
-import React, { Component } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { Container, AppBar, Toolbar, Drawer, Badge, Link, IconButton } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
+import React from 'react';
+import { Link, withRouter } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import InputBase from '@material-ui/core/InputBase';
+import Badge from '@material-ui/core/Badge';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
+import SearchIcon from '@material-ui/icons/Search';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import MoreIcon from '@material-ui/icons/MoreVert';
+import { navbarStyles } from './navbar.styles';
+import logo from '../../../img/logo.png';
 
-// import { logoutUser } from '../../../actions/authActions';
-// import { checkNotification } from '../../../actions/notificationActions';
-// import Desktop from './Desktop';
-// import SideDrawer from './SideDrawer';
-// import NotificationList from '../../notification/NotificationList';
-// import UserMenu from '../UserMenu';
 
-// import Logo from '../../../img/logo.png';
+export const Navbar = withRouter(({ history }) => {
+  const classes = navbarStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
-class Navbar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showNotification: false,
-      showUserMenu: false,
-      toggleDrawer: false,
-      anchorEl1: "",
-      anchorEl2: ""
-    };
-    this.onShowNotification = this.onShowNotification.bind(this);
-    this.onShowUserMenu = this.onShowUserMenu.bind(this);
-    this.onHideNotification = this.onHideNotification.bind(this);
-    this.onHideUserMenu = this.onHideUserMenu.bind(this);
-    this.onLogoutClick = this.onLogoutClick.bind(this);
-  }
+  const isMenuOpen = Boolean(anchorEl);
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  onShowNotification(e) {
-    e.preventDefault();
-    this.setState({
-      showNotification: true,
-      anchorEl1: e.currentTarget
-    });
-    this.props.checkNotification();
-  }
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-  onShowUserMenu(e) {
-    e.preventDefault();
-    this.setState({
-      showUserMenu: true,
-      anchorEl2: e.currentTarget
-    });
-  }
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
+  };
 
-  onHideNotification(e) {
-    e.preventDefault();
-    this.setState({
-      showNotification: false,
-      anchorEl1: null
-    });
-  }
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+  };
 
-  onHideUserMenu(e) {
-    e.preventDefault();
-    this.setState({
-      showUserMenu: false,
-      anchorEl2: null
-    });
-  }
+  const handleMobileMenuOpen = (event) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
 
-  onLogoutClick(e) {
-    e.preventDefault();
-    this.props.logoutUser();
-  }
+  const menuId = 'primary-search-account-menu';
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+    </Menu>
+  );
 
-  render() {
-    const { isAuthenticated, notifications } = this.props.auth;
+  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem>
+        <IconButton aria-label="show 4 new mails" color="inherit">
+          <Badge badgeContent={4} color="secondary">
+            <MailIcon />
+          </Badge>
+        </IconButton>
+        <p>Messages</p>
+      </MenuItem>
+      <MenuItem>
+        <IconButton aria-label="show 11 new notifications" color="inherit">
+          <Badge badgeContent={11} color="secondary">
+            <NotificationsIcon />
+          </Badge>
+        </IconButton>
+        <p>Notifications</p>
+      </MenuItem>
+      <MenuItem onClick={handleProfileMenuOpen}>
+        <IconButton
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <AccountCircle />
+        </IconButton>
+        <p>Profile</p>
+      </MenuItem>
+    </Menu>
+  );
 
-    const handleDrawerOpen = () => {
-      this.setState({ toggleDrawer: true });
-    };
+  return (
+    <div className={classes.grow}>
+      <AppBar position="static">
 
-    const handleDrawerClose = () => {
-      this.setState({ toggleDrawer: false });
-    };
+        <Toolbar>
+          <img src={logo} alt="logo" className={classes.logo} />
+          <Link to="/" className={classes.whiteLink}>
+            <Typography
+              className={classes.title}
+              variant="h6" noWrap>
+              Discovery
+          </Typography>
+          </Link>
 
-    const notificationsList = (
-      <Badge badgeContent={notifications.unread} color="secondary" onClick={this.onShowNotification} className="xm-1">
-        <NotificationsIcon />
-      </Badge>
-    );
+          <div className={classes.grow} />
+          <div className={classes.sectionDesktop}>
+            <IconButton aria-label="show 4 new mails" color="inherit">
+              <Badge badgeContent={4} color="secondary">
+                <MailIcon />
+              </Badge>
+            </IconButton>
+            <IconButton aria-label="show 17 new notifications" color="inherit">
+              <Badge badgeContent={17} color="secondary">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
 
-    return (
-      <AppBar className="primary-color" position="static">
-        <Container>
-          <Toolbar disableGutters className="toolbar">
-            <Link component={RouterLink} to="/">
-              {/* <img src={Logo} className="logo" alt="Logo" /> */}
-            </Link>
 
-            <div className="hiddenDesk">
-              <Link className="white-link" component={RouterLink} to="/events">
-                Events List
-              </Link>
+            <Button
+              className={classes.whiteLink}
+              component={Link} to="/">
+              Technology
+            </Button>
 
-              {isAuthenticated ? (
-                <Link className="white-link" component={RouterLink} to="/create-event">
-                  Create Event
-                </Link>
-              ) : null}
-            </div>
+            <Button
+              className={classes.whiteLink}
+              component={Link} to="/paths">
+              Community
+            </Button>
 
-            <div className="toolbarRight">
-              <Desktop
-                isAuthenticated={isAuthenticated}
-                notificationsUnread={notifications.unread}
-                onShowNotification={this.onShowNotification}
-                onShowUserMenu={this.onShowUserMenu} />
+            <Button
+              className={classes.whiteLink}
+              component={Link} to="/paths">
+              Courses
+            </Button>
 
-              <div className="hiddenMobile">
-                {isAuthenticated ? notificationsList : null}
-                <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleDrawerOpen}>
-                  <MenuIcon fontSize="large" />
-                </IconButton>
-              </div>
-            </div>
-          </Toolbar>
-        </Container>
+            <Button
+              className={classes.whiteLink}
+              component={Link} to="/paths">
+              Get Involved
+            </Button>
 
-        <Drawer anchor="right" open={this.state.toggleDrawer} onClick={handleDrawerClose} onClose={handleDrawerClose} onKeyDown={handleDrawerClose}>
-          <SideDrawer
-            isAuthenticated={isAuthenticated}
-            logout={this.onLogoutClick} />
-        </Drawer>
 
-        <NotificationList notifications={notifications.notification} anchorEl={this.state.anchorEl1} onClose={this.onHideNotification} />
-        <UserMenu anchorEl={this.state.anchorEl2} onClose={this.onHideUserMenu} onLogOut={this.onLogoutClick} />
+
+            <IconButton
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+          </div>
+          <div className={classes.sectionMobile}>
+            <IconButton
+              aria-label="show more"
+              aria-controls={mobileMenuId}
+              aria-haspopup="true"
+              onClick={handleMobileMenuOpen}
+              color="inherit"
+            >
+              <MoreIcon />
+            </IconButton>
+          </div>
+        </Toolbar>
       </AppBar>
-    );
-  }
-}
+      {renderMobileMenu}
+      {renderMenu}
+    </div>
+  );
+})
 
-const mapStateToProps = (state) => ({
-  auth: state.auth
-});
-
-export default connect(mapStateToProps, { logoutUser, checkNotification })(Navbar);
