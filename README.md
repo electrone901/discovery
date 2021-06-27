@@ -22,7 +22,5 @@ Discovery is an application that helps educate and onboard both users and develo
 
 ## Preview
 - Landing
-![landing](https://res.cloudinary.com/ysongit/image/upload/v1581730000/project/Screen_Shot_2020-02-14_at_8.25.52_PM_oi1lpc.png "Landing")
+![landing](URL")
 
-- Sign Up
-![sign up](https://res.cloudinary.com/ysongit/image/upload/v1581730312/project/Screen_Shot_2020-02-14_at_8.31.41_PM_rjqvoc.png "Sign Up")
